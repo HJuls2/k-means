@@ -8,14 +8,16 @@
 #include <string>
 #include <vector>
 #include "../utils/Point.h"
-#include "../utils/Algorithm.h"
+#include "../utils/KMeansAlgorithm.h"
 
 using namespace std;
 
 
-class SequentialAlgorithm : public Algorithm {
-
-}
+class SequentialKMeansAlgorithm : public KMeansAlgorithm {
+private:
+    virtual Point* computeCentroid(unsigned short int label);
+    virtual double computeRSS(unsigned short int label);
+};
 
 
 #endif //ELABORATO_FINALE_CENTROIDHELPER_H

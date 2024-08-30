@@ -2,11 +2,17 @@
 // Created by giuli on 21/08/2024.
 //
 
-#include "SequentialAlgorithm.h"
+#include "SequentialKMeansAlgorithm.h"
 #include <cmath>
+#include <algorithm>
+
+using namespace std;
 
 
-void SequentialAlgorithm::computeCentroid(unsigned short int label) {
+Point* SequentialKMeansAlgorithm::computeCentroid(unsigned short int label) {
+    vector<Point*> points;
+    copy_if(dataset.begin(), dataset.end(), back_inserter(points), [label](auto a) {return (a->getLabel() == label); });
+
     double x = 0, y = 0 , z = 0;
     for (const auto &point: points) {
         x += point->getX();
@@ -18,10 +24,18 @@ void SequentialAlgorithm::computeCentroid(unsigned short int label) {
     y = y / (double) points.size();
     z = z / (double) points.size();
 
-    centroid =  new Point(x, y, z);
+    auto centroid =  new Point(x, y, z);
+    return centroid;
 }
 
-void SequentialAlgorithm::computeRSS() {
+double SequentialKMeansAlgorithm::computeRSS(unsigned short int label) {
+    //Step 0. Get the centroid
+    auto centroid = computeCentroid(label);
+
+
+    vector<Point*> points;
+    copy_if(dataset.begin(), dataset.end(), back_inserter(points), [label](auto a) {return (a->getLabel() == label); });
+
     // Step 1. Compute squared distance of each point from the centroid and store in vector
     vector <double> squaredDistances;
     for (const auto &point: points) {
@@ -38,13 +52,5 @@ void SequentialAlgorithm::computeRSS() {
         sumOfSquaredDistances += squaredDistance;
     }
 
-    this->RSS = sumOfSquaredDistances;
-}
-
-void SequentialAlgorithm::addPoint(Point * point) {
-    this->points.push_back(point);
-}
-
-void SequentialAlgorithm::removePoint(Point *point) {
-    this->points.
+    return sumOfSquaredDistances;
 }
